@@ -1,0 +1,9 @@
+RangeFinder     KEYWORD1
+isReady         KEYWORD2
+dataReady       KEYWORD2
+setDistanceMode KEYWORD2
+range           KEYWORD2
+_sensor_1       KEYWORD2
+_sensor_2       KEYWORD2
+_sensor_3       KEYWORD2
+_isRunning      KEYWORD2
