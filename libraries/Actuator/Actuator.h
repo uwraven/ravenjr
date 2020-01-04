@@ -4,24 +4,25 @@
 */
 
 #include <Arduino.h>
-#include <Servo.h>
+#include <PWMServo.h>
 #include <RO_Math.h>
 
-#define M1_PIN 10	
-#define M2_PIN 11
-#define B_PIN 9
-#define G_PIN 8
+#define M1_PIN 11
+#define M2_PIN 12
+#define B_PIN 10
+#define G_PIN 9
 
 #define GEARRATIO 3.0f
 #define MASS 1.50831337f
 
 // rate at which thrust = weight of vehicle
-#define M_MASS_NORMAL_INPUTRATE 630.0
-#define BASE_RATE 1100
-#define MOTORPWMMIN 1100
-#define MOTORPWMMAX 2100
+#define M_MASS_NORMAL_INPUTRATE 100
+#define BASE_RATE 0
+#define MOTORPWMMIN 60
+// #define MOTORPWMMAX 180
+#define MOTORPWMMAX 75
 
-#define CALIBRATION_INTERVAL 500
+#define CALIBRATION_TIME_INTERVAL 500
 
 #define _BETA_MIN 25.0f
 #define _BETA_MID 85.0f
@@ -33,10 +34,10 @@
 
 class Actuator {
     private:
-         Servo _motor1;
-         Servo _motor2;
-         Servo _betaServo;
-         Servo _gammaServo;
+         PWMServo _motor1;
+         PWMServo _motor2;
+         PWMServo _betaServo;
+         PWMServo _gammaServo;
          unsigned long _age;
          byte step;
 
@@ -63,16 +64,16 @@ class Actuator {
 
         Actuator() {}
 
-        bool init() {
+        void init() {
             _motor1.attach(M1_PIN);
             _motor2.attach(M2_PIN);
             _betaServo.attach(B_PIN);
             _gammaServo.attach(G_PIN);
-            _motor1.writeMicroseconds(BASE_RATE);
-            _motor2.writeMicroseconds(BASE_RATE);
-            _betaServo.write(90);
+            _motor1.write(BASE_RATE);
+            _motor2.write(BASE_RATE);
+            _betaServo.write(110);
             _gammaServo.write(90);
-            return (_motor1.attached() && _motor2.attached() && _betaServo.attached() && _gammaServo.attached());
+            // return (_motor1.attached() && _motor2.attached() && _betaServo.attached() && _gammaServo.attached());
         }
 
         void calibrate() {
@@ -86,7 +87,7 @@ class Actuator {
                 case 5: setGimbalAngles(90,90); break;
                 default: setGimbalAngles(90,90); break;
             }
-            if (millis() - _age > CALIBRATION_INTERVAL) {
+            if (millis() - _age > CALIBRATION_TIME_INTERVAL) {
                 _age = millis();
                 Serial.println();
                 if (step > 5) {
@@ -97,29 +98,29 @@ class Actuator {
             }
         }
 
-        bool writeActuators(float _beta, float _gamma, float _m1, float _m2) {
-           _betaServo.write(toServoAngle(_beta, _BETA_MIN, _BETA_MAX, _BETA_MID));
-           _gammaServo.write(toServoAngle(_gamma, _GAMMA_MIN, _GAMMA_MAX, _GAMMA_MID));
+        void writeActuators(float _beta, float _gamma, float _m1, float _m2) {
+            _betaServo.write(toServoAngle(_beta, _BETA_MIN, _BETA_MAX, _BETA_MID));
+            _gammaServo.write(toServoAngle(_gamma, _GAMMA_MIN, _GAMMA_MAX, _GAMMA_MID));
             _motor1.write(toMotorInput(_m1));
             _motor2.write(toMotorInput(_m2));
         }
 
-        bool setMotorRates(unsigned int _m1_rate_ms, unsigned int _m2_rate_ms) {
-            _motor1.writeMicroseconds(_m1_rate_ms);
-            _motor2.writeMicroseconds(_m2_rate_ms);
-            return (_motor1.read() == _m1_rate_ms && _motor2.read() == _m2_rate_ms);
+        void setMotorRates(unsigned int _m1_rate_ms, unsigned int _m2_rate_ms) {
+            _motor1.write(_m1_rate_ms);
+            _motor2.write(_m2_rate_ms);
+            // return (_motor1.read() == _m1_rate_ms && _motor2.read() == _m2_rate_ms);
         }
 
-        bool setGimbalAngles(uint32_t _beta_ang, uint32_t _gamma_ang) {
+        void setGimbalAngles(uint32_t _beta_ang, uint32_t _gamma_ang) {
             _betaServo.write(_beta_ang);
             _gammaServo.write(_gamma_ang);
-            return (_betaServo.read() == _beta_ang && _gammaServo.read() == _gamma_ang);
+            // return (_betaServo.read() == _beta_ang && _gammaServo.read() == _gamma_ang);
         }
 
         void print() {
-            Serial.print(_motor1.readMicroseconds()); Serial.print(" ");
-            Serial.print(_motor2.readMicroseconds()); Serial.print(" ");
-            Serial.print(" "); Serial.print(_betaServo.read()); Serial.print(" ");
-            Serial.println(_gammaServo.read());
+            // Serial.print(_motor1.read()); Serial.print(" ");
+            // Serial.print(_motor2.read()); Serial.print(" ");
+            // Serial.print(" "); Serial.print(_betaServo.read()); Serial.print(" ");
+            // Serial.println(_gammaServo.read());
         }
 };

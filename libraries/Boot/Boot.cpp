@@ -31,6 +31,13 @@ void Boot::init() {
 
     // begin boot sequence:
     _bootup();
+
+    Serial.println();
+    Serial.println(F("Waypoints:"));
+    for (uint8_t i = 0; i < WAYPOINTS; i++) {
+        _comm.printTarget(target_x[i], target_y[i], target_z[i], target_t[i]);
+    }
+    Serial.println();
 }
 
 void Boot::main() {
@@ -78,6 +85,7 @@ void Boot::setState(int newState) {
             _light.setRate(2);
             break;
         case COMPLETE:
+            _controller.setSafe();
             Serial.println(STOP_FLAG);
             Serial.println(F("-> COMPLETE"));
             Serial.println("Final waypoint reached, landing sequence terminated");
@@ -108,13 +116,6 @@ void Boot::_bootup() {
     _light.turnOn();
     _light.setRate(20);
     _comm.init();
-
-    Serial.println();
-    Serial.println(F("Waypoints:"));
-    for (uint8_t i = 0; i < WAYPOINTS; i++) {
-        _comm.printTarget(target_x[i], target_y[i], target_z[i], target_t[i]);
-    }
-    Serial.println();
 
 
     // if past boot interval, set wait_to_init to false

@@ -7,12 +7,13 @@ Comm comm;
 int step;
 
 // the minimum cutoff for esc pwm
-#define ZERO 1000
+#define ZERO 10
 
 // how many ms do we increment on input?
-#define INTERVAL 100
+#define INTERVAL 10
 
 void setup() {
+    while(!Serial);
     Serial.begin(115200);
     Serial.println("Welcome to motor calibration");
     Serial.println("Get ready to spin and stuff");

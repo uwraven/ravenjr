@@ -7,30 +7,36 @@ VL53L1X lidar_2;
 
 void setup() {
     // initialize serial and i2C comms
+    while(!Serial);
+    
     Serial.begin(115200);
     Wire.begin();
+
+    Wire.setSDA(18);
+    Wire.setSCL(19);
+    
     Wire.setClock(400000);  
 
     // setup XSHUT pins
+    pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
-    pinMode(6, OUTPUT);
-    pinMode(7, OUTPUT);
 
     // deactivate sensors
+    digitalWrite(3, LOW);
+    digitalWrite(4, LOW);
     digitalWrite(5, LOW);
-    digitalWrite(6, LOW);
-    digitalWrite(7, LOW);
 
     // turn on, init, and set address for each sensor individually
-    pinMode(5, INPUT);
+    pinMode(3, INPUT);
     if (!lidar_0.init()) { Serial.println("Failed to initialize VL53L1X sensor 0"); }
     lidar_0.setAddress(0x33);
 
-    pinMode(6, INPUT);
+    pinMode(4, INPUT);
     if (!lidar_1.init()) { Serial.println("Failed to initialize VL53L1X sensor 1"); }
     lidar_1.setAddress(0x35);
 
-    pinMode(7, INPUT);
+    pinMode(5, INPUT);
     if (!lidar_2.init()) { Serial.println("Failed to initialize VL53L1X sensor 1"); }
     lidar_2.setAddress(0x37);
 
@@ -65,7 +71,7 @@ void setup() {
 }
 
 void loop() {
-    delay(50);
+    delay(100);
     lidar_0.read();
     lidar_1.read();
     lidar_2.read();

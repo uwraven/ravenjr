@@ -14,20 +14,20 @@
 #include <BasicLinearAlgebraOptimized.h>
 #include <Quaternion.h>
 #include <Vec3.h>
-#include <MemoryFree.h>
+// #include <MemoryFree.h>
 #include <Target.h>
 #include <RO_Math.h>
 
-#define ISVEHICLE false
+#define ISVEHICLE true
 
 #define G_BETA_DIRECTION -1.0f
 #define G_GAMMA_DIRECTION 1.0f
 
-#define NOMINAL_DT 0.065f
+#define NOMINAL_DT 0.001f
 // #define WRC 0.5f
 // #define ARC 0.225f
-#define WRC 0.3f
-#define ARC 0.115f
+#define WRC 0.002f
+#define ARC 0.008f
 
 class Controller {
     public:
@@ -39,7 +39,9 @@ class Controller {
             _initPosGains();
             _initControlGains();
             _initSensorFilters();
-	        return ((_fuse.init()) && (_actuator.init()));
+	        // return ((_fuse.init()) && (_actuator.init()));
+            _actuator.init();
+            return (_fuse.init());
         };
 
         void calibrate() {
@@ -57,9 +59,9 @@ class Controller {
                 _x_att(3) = sinf(_fuse.initialYaw);
             }
             _age = millis();
-            _att_age = millis() - 10;
-            _alt_age = millis() - 10;
-            _pos_age = millis() - 10;
+            _att_age = millis() - 1;
+            _alt_age = millis() - 1;
+            _pos_age = millis() - 1;
         }
 
         void main(bool shouldActuate) {
@@ -77,10 +79,15 @@ class Controller {
                 _actuator.writeActuators(0, 0, 0, 0);
             }
 
-            print(_dt);
-            //_fuse.a.print(); Serial.println();
-            //_a.print(); Serial.println();
+            // print(_dt);
+            // _fuse.a.print(); Serial.println();
+            _a.print(); Serial.println();
 	    //_w.print(); Serial.println();
+        }
+
+        void setSafe() {
+            _actuator.setGimbalAngles(90, 90);
+            _actuator.setMotorRates(0, 0);
         }
 
         void updateAttitudeEstimate() {

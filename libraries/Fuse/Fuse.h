@@ -52,11 +52,11 @@ class Fuse {
         const float LONDISTMEQ = 111.321 * 1000; 
 
         // PINS
-        const byte _P_BOARD_TX = 13;
-        const byte _P_BOARD_RX = 12;
-        const byte _P_RF1 = 5;
-        const byte _P_RF2 = 6;
-        const byte _P_RF3 = 7;
+        const byte _P_BOARD_TX = 8;
+        const byte _P_BOARD_RX = 7;
+        const byte _P_RF1 = 3;
+        const byte _P_RF2 = 4;
+        const byte _P_RF3 = 5;
 
         uint32_t _age = 0;
         bool _gpsEnabled = false;
