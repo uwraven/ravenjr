@@ -40,7 +40,11 @@ class Controller {
             _initControlGains();
             _initSensorFilters();
 	        // return ((_fuse.init()) && (_actuator.init()));
+
             _actuator.init();
+
+            Serial.println("Actuator passess");
+
             return (_fuse.init());
         };
 

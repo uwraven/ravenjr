@@ -32,21 +32,21 @@ class Fuse {
 
         // Magnetometer spherical calibration values
 
-        #if FLIGHT_CONFIGURATION
-            const int32_t _MAG_MIN1 = -2492;
-            const int32_t _MAG_MIN2 = -2702;
-            const int32_t _MAG_MIN3 = -2478;
-            const int32_t _MAG_MAX1 = 3795;
-            const int32_t _MAG_MAX2 = 3037;
-            const int32_t _MAG_MAX3 = 3290;
-        #else
-            const int32_t _MAG_MIN1 = -2284;
-            const int32_t _MAG_MIN2 = -2718;
-            const int32_t _MAG_MIN3 = -2792;
-            const int32_t _MAG_MAX1 = 3527;
-            const int32_t _MAG_MAX2 = 3433;
-            const int32_t _MAG_MAX3 = 3448;
-        #endif
+        // #if FLIGHT_CONFIGURATION
+        const int32_t _MAG_MIN1 = -2492;
+        const int32_t _MAG_MIN2 = -2702;
+        const int32_t _MAG_MIN3 = -2478;
+        const int32_t _MAG_MAX1 = 3795;
+        const int32_t _MAG_MAX2 = 3037;
+        const int32_t _MAG_MAX3 = 3290;
+        // #else
+        // const int32_t _MAG_MIN1 = -2284;
+        // const int32_t _MAG_MIN2 = -2718;
+        // const int32_t _MAG_MIN3 = -2792;
+        // const int32_t _MAG_MAX1 = 3527;
+        // const int32_t _MAG_MAX2 = 3433;
+        // const int32_t _MAG_MAX3 = 3448;
+        // #endif
 
         const float LATDISTM = 111.133 * 1000;
         const float LONDISTMEQ = 111.321 * 1000; 
@@ -235,7 +235,11 @@ class Fuse {
             magneticReference = Vec3(1.0, 0.0, 0.0);
 
             // Try initializing each sensor
-            if (!_rangeFinder.init(_rfPins, _rfAddresses)) return false;
+            if (!_rangeFinder.init(_rfPins, _rfAddresses)) {
+                Serial.println(F("INIT:: RF Failed to initialize"));
+                return false;
+            }
+
             if (!_barometer.init()) {
                 Serial.println(F("INIT:: Barometer failed to initialize"));
                 return false;
@@ -304,7 +308,7 @@ class Fuse {
             readCompacc();
             readGyro();
             if (_gpsEnabled) readGPS();
-            readMixedAltitude(attitude);
+            // readMixedAltitude(attitude);
         }
 
         void readCompacc() {
@@ -352,8 +356,14 @@ class Fuse {
         }
 
         void print() {
-            w.print(); Serial.print(" ");
-            a.print(); Serial.print(" ");
+            // Serial.print(_compacc.a.x); Serial.print("_");
+            // Serial.print(_compacc.a.y); Serial.print("_");
+            // Serial.print(_compacc.a.z); Serial.print("_");
+            // Serial.print(_gyro.x); Serial.print("_");
+            // Serial.print(_gyro.y); Serial.print("_");
+            // Serial.print(_gyro.z);
+            w.print(); Serial.print("_");
+            a.print(); Serial.print("_");
             m.print();
             Serial.println();
         }

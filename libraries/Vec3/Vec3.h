@@ -42,9 +42,15 @@ class Vec3 {
         static float dot(Vec3 vec1, Vec3 vec2);
 
         void print() {
-            Serial.print(x, 5); Serial.print(" ");
-            Serial.print(y, 5); Serial.print(" ");
-            Serial.print(z, 5);
+            Serial.print(x, 8); Serial.print("_");
+            Serial.print(y, 8); Serial.print("_");
+            Serial.print(z, 8);
+        }
+
+        void print(char delimeter) {
+            Serial.print(x, 8); Serial.print(delimeter);
+            Serial.print(y, 8); Serial.print(delimeter);
+            Serial.print(z, 8);
         }
 };
 

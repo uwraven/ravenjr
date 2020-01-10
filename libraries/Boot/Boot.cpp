@@ -117,7 +117,6 @@ void Boot::_bootup() {
     _light.setRate(20);
     _comm.init();
 
-
     // if past boot interval, set wait_to_init to false
     // this will allow the controller to try booting again
     if (millis() - _initAge > BOOT_INTERVAL_MS) {
@@ -128,8 +127,10 @@ void Boot::_bootup() {
     if (!_waitToInit) {
         // Try to initialize flight controller
         // if failed, wait for 2 seconds
+        Serial.println("Trying to initialize controller");
         if (_controller.init()) {
             // if succesful, move on to calibration
+            Serial.println("Controller initialized successfully");
             setState(CALIBRATING);
         } else {
             _waitToInit = true;

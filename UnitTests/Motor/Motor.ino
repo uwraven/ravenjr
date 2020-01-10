@@ -2,6 +2,7 @@
 #include <Comm.h>
 
 Actuator actuator;
+Fuse fuse;
 Comm comm;
 
 int step;
@@ -22,6 +23,7 @@ void setup() {
     Serial.println("Press any other key to stop");
     comm.receive();
     actuator.init();
+    fuse.init();
     step = ZERO;
     actuator.setMotorRates(step, step);
 }

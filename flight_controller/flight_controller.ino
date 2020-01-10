@@ -1,4 +1,4 @@
-#define FLIGHT_CONFIGURATION false
+//#define FLIGHT_CONFIGURATION f
 
 #include <Boot.h>
 
